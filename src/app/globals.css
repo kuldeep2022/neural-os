@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000510;
+  --foreground: #00f5ff;
 }
 
 @theme inline {
@@ -12,15 +12,67 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono), 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* Scanline effect */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 245, 255, 0.015) 2px,
+    rgba(0, 245, 255, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000510; }
+::-webkit-scrollbar-thumb { background: #00f5ff30; border-radius: 2px; }
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.8; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 10px #00f5ff30, 0 0 20px #00f5ff10; }
+  50% { box-shadow: 0 0 20px #00f5ff50, 0 0 40px #00f5ff20; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+.cursor::after {
+  content: '█';
+  animation: blink 1s infinite;
+  color: #00f5ff;
+}
+
+.window-glow {
+  box-shadow: 0 0 1px #00f5ff, 0 0 10px #00f5ff20, inset 0 0 20px #00f5ff05;
+}
+
+.flicker { animation: flicker 8s infinite; }
+
+.glow-text {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
 }
