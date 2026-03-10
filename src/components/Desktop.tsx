@@ -27,17 +27,17 @@ export default function Desktop() {
   return (
     <div className="fixed inset-0 pb-12" style={{ zIndex: 1 }}>
       {/* Desktop icons */}
-      <div className="absolute top-6 right-6 flex flex-col gap-2">
+      <div className="absolute top-6 right-4 md:right-6 flex flex-row md:flex-col gap-2 md:gap-2">
         {DESKTOP_ICONS.map((icon) => (
           <motion.button
             key={icon.id}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onDoubleClick={() => openApp(icon.id)}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-cyan-400/5 w-16 group"
+            onClick={() => openApp(icon.id)}
+            className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-cyan-400/5 active:bg-cyan-400/10 w-16 group"
           >
             <span className="text-2xl">{icon.icon}</span>
-            <span className="text-xs text-cyan-400/50 group-hover:text-cyan-400/80 text-center leading-tight">{icon.label}</span>
+            <span className="text-[10px] md:text-xs text-cyan-400/50 group-hover:text-cyan-400/80 text-center leading-tight">{icon.label}</span>
           </motion.button>
         ))}
       </div>
@@ -64,10 +64,10 @@ export default function Desktop() {
         );
       })}
 
-      {/* Double-click hint */}
+      {/* Tap hint */}
       {windows.length === 0 && (
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-cyan-400/20 text-xs text-center">
-          Double-click an icon to open an app
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-cyan-400/20 text-xs text-center px-4">
+          Tap an icon to open an app
         </div>
       )}
     </div>

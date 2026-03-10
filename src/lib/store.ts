@@ -28,11 +28,18 @@ interface OsStore {
   restoreWindow: (id: string) => void;
 }
 
+const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768;
+
 const APP_DEFAULTS: Record<AppId, Omit<AppWindow, 'id' | 'zIndex'>> = {
   terminal: { appId: 'terminal', title: 'NEURAL_TERMINAL', x: 80, y: 80, width: 600, height: 400, minimized: false },
   files: { appId: 'files', title: 'FILE_SYSTEM', x: 160, y: 120, width: 500, height: 380, minimized: false },
   monitor: { appId: 'monitor', title: 'SYSTEM_MONITOR', x: 240, y: 100, width: 560, height: 420, minimized: false },
   ai: { appId: 'ai', title: 'AI_INTERFACE', x: 120, y: 90, width: 580, height: 450, minimized: false },
+};
+
+const getMobileDefaults = (appId: AppId): Partial<AppWindow> => {
+  if (!isMobile()) return {};
+  return { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight - 48 };
 };
 
 export const useOsStore = create<OsStore>((set, get) => ({
@@ -52,8 +59,9 @@ export const useOsStore = create<OsStore>((set, get) => ({
     }
     const newZ = get().topZ + 1;
     const id = Math.random().toString(36).slice(2);
+    const mobileOverrides = getMobileDefaults(appId);
     set({
-      windows: [...get().windows, { ...APP_DEFAULTS[appId], id, zIndex: newZ }],
+      windows: [...get().windows, { ...APP_DEFAULTS[appId], ...mobileOverrides, id, zIndex: newZ }],
       activeWindowId: id,
       topZ: newZ,
     });
